@@ -1,0 +1,36 @@
+DEPENDENCIES:
+  * owl lisp
+  * sqlite3
+  * apache web server (or roll your own)
+
+BUILD:
+  $ make all
+
+RUN:
+  * point apache at public/
+  * make run
+  will build the front-end and link-adder server.
+
+PUBLIC API:
+  /short.cgi?code
+  /?code ← if short.cgi is the defaultindex
+    redirects to url referred to by code
+
+  echo "https://example.com id-wanted" | nc https://the-linkserver.com 9420
+    adds URL to the database with id-wanted as id.
+    id-wanted can be ommited, a new id is then auto-generated for the request.
+    new id is always returned to the user via the same connection.
+
+PRIVATE API:
+  execl("/path/to/short.cgi", "short.cgi", "add", "URL")
+    adds URL to the database
+
+CONFIGURATION NOTES
+  * apache2
+    - set AllowOverride to all
+  * openbsd httpd
+    - enable and start `slowcgi'
+    - in httpd.conf:
+      location "/*.cgi" { fastcgi }
+      location "/path/to/short/" { directory index "short.cgi" }  # path/to/short should probably be /
+      location "*private*" { block return 403 }

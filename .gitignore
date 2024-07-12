@@ -1,0 +1,6 @@
+*.core
+*.o
+*.~undo-tree~
+*.sqlite
+*.cgi
+server

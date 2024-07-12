@@ -1,0 +1,3 @@
+Options All -Indexes +ExecCgi
+AddHandler cgi-script .cgi
+DirectoryIndex short.cgi
