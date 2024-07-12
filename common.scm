@@ -56,17 +56,26 @@
     (define (has-id? ptr id)
       (not (null? (s3/execute* ptr "select tid from links where tid = ?" (list id)))))
 
+    (define maxlen 1024)
+    (define (sanity-check l id)
+      (or (> (string-length l) maxlen)
+          (> (string-length id) maxlen)))
+
     (define (add-link ptr l)
-      (let ((id (new-id ptr)))
-        (s3/execute* ptr "insert into links (tid, target, custom) values (?,?,0)" (list id l))
-        id))
+      (if (sanity-check l "")
+          (let ((id (new-id ptr)))
+            (s3/execute* ptr "insert into links (tid, target, custom) values (?,?,0)" (list id l))
+            id)
+          "link or id too long"))
 
     (define (add-link* ptr l id)
-      (if (has-id? ptr id)
-          "id already points to other link."
-          (begin
-            (s3/execute* ptr "insert into links (tid, target, custom) values (?,?,1)" (list id l))
-            id)))
+      (if (sanity-check l id)
+          (if (has-id? ptr id)
+              "id already points to other link."
+              (begin
+                (s3/execute* ptr "insert into links (tid, target, custom) values (?,?,1)" (list id l))
+                id))
+          "link or id too long"))
 
     (define (get-link ptr tid)
       (caar* (s3/execute* ptr "select target from links where tid = ?" (list tid))))
