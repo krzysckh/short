@@ -58,8 +58,8 @@
 
     (define maxlen 1024)
     (define (sanity-check l id)
-      (or (> (string-length l) maxlen)
-          (> (string-length id) maxlen)))
+      (and (< (string-length l) maxlen)
+           (< (string-length id) maxlen)))
 
     (define (add-link ptr l)
       (if (sanity-check l "")
