@@ -27,14 +27,13 @@
 ;; ips = alist of (ip . time)
 (define (start-timeouter)
   (let loop ((ips #n))
-    (lets ((to ip (next-mail)))
-      (lets ((l (assoc ip ips)))
-        (if l
-            (if (> (- (time) *timeout-seconds*) (cdr l))
-                (begin (mail to #t) (loop (map (λ (v) (if (equal? (car v) ip) (cons ip (time)) v))
-                                               ips)))
-                (begin (mail to #f) (loop ips)))
-            (begin (mail to #t) (loop (append ips (list (cons ip (time)))))))))))
+    (lets ((to ip (next-mail))
+           (l (assoc ip ips)))
+      (if l
+          (if (> (- (time) *timeout-seconds*) (cdr l))
+              (begin (mail to #t) (loop (map (λ (v) (if (equal? (car v) ip) (cons ip (time)) v)) ips)))
+              (begin (mail to #f) (loop ips)))
+          (begin (mail to #t) (loop (append ips (list (cons ip (time))))))))))
 
 (λ (args)
   (thread 'timeout (start-timeouter))
