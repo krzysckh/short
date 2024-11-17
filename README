@@ -1,5 +1,5 @@
 DEPENDENCIES:
-  * owl lisp
+  * owl lisp with sqlite extension enabled
   * sqlite3
   * apache web server (or roll your own)
 

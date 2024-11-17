@@ -1,6 +1,6 @@
 (import
  (owl toplevel)
- (prefix (sqlite) s3/)
+ (prefix (ext sqlite io) s3/)
  (common))
 
 (define *timeout-seconds* 5)

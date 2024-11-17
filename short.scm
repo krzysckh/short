@@ -2,11 +2,11 @@
  (owl toplevel)
  (owl regex)
  (prefix (owl sys) sys/)
- (prefix (sqlite) s3/)
+ (prefix (ext sqlite io) s3/)
  (common))
 
 (define (count ptr)
-  (caar* (s3/execute* ptr "select count(tid) from links" #n)))
+  (caar* (s3/execute ptr "select count(tid) from links" #n)))
 
 (define (info ptr)
   (print "powered by short")
